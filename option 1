@@ -1,0 +1,71 @@
+import PIL
+from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
+from PIL import ImageEnhance
+
+
+# read image and convert to RGB
+image=Image.open("readonly/msi_recruitment.gif")
+image=image.convert('RGB')
+
+imagesnew=[]
+
+
+
+
+for i in [0.1,0.5,0.9]:
+    picture_new = Image.new('RGB', (800, 500))
+    for x in range(image.width):
+        for y in range(image.height):
+            r,g,b= image.getpixel((x,y))
+            r= int (i*r)
+            picture_new.putpixel((x,y),(r,g,b))
+    # get a font
+    #fnt = ImageFont.truetype('readonly/fanwood-webfont.ttf', 15)
+    picture_txt = ImageDraw.Draw(picture_new)
+    picture_txt.text((100,465),"channel 1.0 intensity {}.".format (i),font = ImageFont.truetype('readonly/fanwood-webfont.ttf', 40) ,fill=(255,255,255,0))
+    imagesnew.append (picture_new)
+    
+for i in [0.1,0.5,0.9]:
+    picture_new = Image.new('RGB', (800, 500))
+    for x in range(image.width):
+        for y in range(image.height):
+            r,g,b= image.getpixel((x,y))
+            g= int (i*g)
+            picture_new.putpixel((x,y),(r,g,b))
+    picture_txt = ImageDraw.Draw(picture_new)
+    picture_txt.text((100,465),"channel 2.0 intensity {}.".format (i),font = ImageFont.truetype('readonly/fanwood-webfont.ttf', 40) ,fill=(255,255,255,0))
+    imagesnew.append (picture_new)
+    
+for i in [0.1,0.5,0.9]:
+    picture_new = Image.new('RGB', (800, 500))
+    for x in range(image.width):
+        for y in range(image.height):
+            r,g,b= image.getpixel((x,y))
+            b= int (i*b)
+            picture_new.putpixel((x,y),(r,g,b))
+    picture_txt = ImageDraw.Draw(picture_new)
+    picture_txt.text((100,465),"channel 3.0 intensity {}.".format (i),font = ImageFont.truetype('readonly/fanwood-webfont.ttf', 40) ,fill=(255,255,255,0))
+    imagesnew.append (picture_new)
+
+# create a contact sheet from different brightnesses
+first_image=images[0]
+contact_sheet=PIL.Image.new(first_image.mode, (first_image.width*3,first_image.height*3+150))
+x=0
+y=0
+
+for img in imagesnew:
+    # Lets paste the current image into the contact sheet
+    contact_sheet.paste(img, (x, y) )
+    # Now we update our X position. If it is going to be the width of the image, then we set it to 0
+    # and update Y as well to point to the next "line" of the contact sheet.
+    if x+first_image.width == contact_sheet.width:
+        x=0
+        y=y+first_image.height+50
+    else:
+        x=x+first_image.width
+
+        
+contact_sheet = contact_sheet.resize((int(contact_sheet.width/2),int(contact_sheet.height/2) ))
+
+display(contact_sheet)
